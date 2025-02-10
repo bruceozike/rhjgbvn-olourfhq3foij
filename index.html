@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine?</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #FFE4E8;
+            font-family: 'Comic Sans MS', cursive;
+        }
+
+        .container {
+            text-align: center;
+            padding: 4rem;
+            background-color: white;
+            border-radius: 30px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.15);
+            max-width: 800px;
+            width: 80vw;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        h1 {
+            color: #FF69B4;
+            font-size: 3.5rem;
+            margin-bottom: 2rem;
+            line-height: 1.2;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 3rem;
+        }
+
+        .btn {
+            padding: 15px 50px;
+            font-size: 1.8rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .yes-btn {
+            background-color: #FF69B4;
+            color: white;
+        }
+
+        .no-btn {
+            background-color: #FFB6C1;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: scale(1.1);
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .hearts {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 30px;
+            color: #FF69B4;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts"></div>
+    <div class="container">
+        <h1>Jane, will you be my Valentine? 💝</h1>
+        <div class="buttons">
+            <button class="btn yes-btn" onclick="acceptValentine()">Yes!</button>
+            <button class="btn no-btn" onclick="rejectValentine()">No</button>
+        </div>
+    </div>
+
+    <script>
+        // Create falling hearts background
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '💗';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 2 + 's';
+            document.querySelector('.hearts').appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+
+        setInterval(createHeart, 300);
+
+        let noCount = 0;
+        const phrases = [
+            "Jane, are you really sure? 🥺",
+            "Pretty please, Jane? 🌸",
+            "Jane, think again! 💕",
+            "Jane, don't break my heart! 💔",
+            "One more chance, Jane? 🎀",
+            "Jane, I'll be the best Valentine! 🌹",
+            "Jane, you're making me sad... 😢",
+            "Jane, just say yes! 🥰"
+        ];
+
+        function acceptValentine() {
+            document.querySelector('.container').innerHTML = `
+                <h1>Yay! Jane, I knew you'd say yes! 💖</h1>
+                <p style="font-size: 2rem; color: #FF69B4; margin: 2rem 0;">You've made me the happiest person! 💑</p>
+                <img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif" alt="Happy hearts" style="max-width: 400px; width: 100%;">
+            `;
+            // Make it rain more hearts
+            setInterval(createHeart, 100);
+        }
+
+        function rejectValentine() {
+            noCount++;
+            const noBtn = document.querySelector('.no-btn');
+            const yesBtn = document.querySelector('.yes-btn');
+            
+            // Make "Yes" button bigger
+            const scale = 1 + noCount * 0.5; // Increased scaling factor
+            yesBtn.style.transform = `scale(${scale})`;
+            yesBtn.style.position = 'relative';
+            yesBtn.style.zIndex = '1';
+            
+            // Make "No" button smaller and stay beside Yes button
+            noBtn.style.transform = `scale(${1 / (scale)})`;
+            noBtn.style.position = 'relative';
+            noBtn.style.zIndex = '1';
+
+            // Change the question
+            document.querySelector('h1').textContent = phrases[noCount % phrases.length];
+            
+            // If Yes button gets too big, make it fill the screen
+            if (scale > 3) {
+                yesBtn.style.position = 'fixed';
+                yesBtn.style.top = '50%';
+                yesBtn.style.left = '50%';
+                yesBtn.style.transform = `translate(-50%, -50%) scale(${scale})`;
+                noBtn.style.opacity = Math.max(0, 1 - (scale - 3) / 2); // Fade out No button
+            }
+        }
+    </script>
+</body>
+</html> 
